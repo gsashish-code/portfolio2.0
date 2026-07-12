@@ -78,7 +78,7 @@ function WindowWrapper<P extends object>(
   }: WindowWrapperOptions = {},
 ) {
   function WrappedComponent(props: P) {
-    const { windows, closeWindow } = useWindowStore()
+    const { windows, closeWindow, focusWindow } = useWindowStore()
     const window = windows[windowId]
     const isOpen = window?.isOpen ?? false
 
@@ -119,7 +119,12 @@ function WindowWrapper<P extends object>(
     return (
       <div
         ref={windowRef}
-        style={{ width: defaultWidth, height: defaultHeight }}
+        onMouseDown={() => focusWindow(windowId)}
+        style={{
+          width: defaultWidth,
+          height: defaultHeight,
+          zIndex: window.zIndex,
+        }}
         className="fixed top-0 left-0 flex flex-col overflow-hidden rounded-xl shadow-2xl ring-1 ring-black/40"
       >
         <div
@@ -142,7 +147,7 @@ function WindowWrapper<P extends object>(
           <div className="w-13" aria-hidden />
         </div>
 
-        <div className="min-h-0 flex-1 overflow-hidden bg-black">
+        <div className="min-h-0 flex-1 overflow-hidden">
           <Component {...props} data={window.data} />
         </div>
 

@@ -30,6 +30,49 @@ body {
   }
 }
 
+@keyframes photo-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@utility shimmer {
+  background-image: linear-gradient(
+    90deg,
+    #262628 25%,
+    #38383b 37%,
+    #262628 63%
+  );
+  background-size: 400% 100%;
+  animation: photo-shimmer 1.4s ease-in-out infinite;
+}
+
+/** Dark, thin scrollbar for dark-chrome app windows (Terminal, Photos). */
+@utility dark-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #4b4b4d transparent;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #4b4b4d;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #6b6b6d;
+  }
+}
+
 @utility flex-center {
   @apply flex items-center justify-center;
 }

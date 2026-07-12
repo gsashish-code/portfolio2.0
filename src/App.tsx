@@ -1,4 +1,5 @@
 import { NavBar, Welcome, Dock } from '#components/index'
+import Photos from '#features/photos'
 import Terminal from '#features/terminal'
 import gsap from 'gsap'
 import { Draggable } from 'gsap/Draggable'
@@ -13,6 +14,7 @@ function App() {
       <Welcome />
       <Dock />
       <Terminal />
+      <Photos />
     </main>
   )
 }

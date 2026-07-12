@@ -234,7 +234,7 @@ and only if it doesn't compromise the performance bar below.
 techstack` / `github stats` and friends).
 - [ ] **Phase 5** — Safari app (browser chrome, blog post list, renders
       project site bookmarks).
-- [ ] **Phase 6** — Photos app (sidebar, date-grouped photo grid).
+- [x] **Phase 6** — Photos app (sidebar, date-grouped photo grid).
 - [ ] **Phase 7** — About Me (Notes-style) + Contact Me (popup card) apps.
 - [ ] **Phase 8** — Resume PDF viewer.
 - [ ] **Phase 9** — Mobile responsive pass across all apps built so far,
@@ -262,44 +262,62 @@ built yet.
 **OS kernel (Phase 1, partial)**: `src/store/window.ts` is a Zustand+immer
 store keyed by window id (`isOpen`/`zIndex`/`data`/optional `title`
 override), with `openWindow`/`closeWindow`/`focusWindow`/`setWindowTitle`.
-`src/core/window/WindowChrome.tsx` is the shared window shell (traffic
-lights with hover glyphs, dynamic title, static centered position — no
-drag/resize/z-order/minimize/maximize yet, no persistence). `src/hoc/
-WindowWrapper.tsx` composes a feature's root component with `WindowChrome`,
-gated on the store's `isOpen`. Boot sequence not built.
+`src/hoc/WindowWrapper.tsx` is the single place that owns the entire window
+shell for every app — chrome (dark title bar, Lucide `X`/`Minus`/`Plus`
+traffic lights, hover-reveal on the whole cluster), dragging (title bar as
+the GSAP Draggable trigger, bounded to the viewport), resizing (corner grip,
+also GSAP Draggable, resizes the box via cumulative drag delta rather than
+moving the grip), and open/close animation (GSAP scale+fade,
+`src/animations/window.ts`, respects `prefers-reduced-motion`). There was
+briefly a separate `WindowChrome` component — folded back into
+`WindowWrapper` since it was the only consumer and the split added
+indirection without reuse benefit. The window's content slot is
+theme-agnostic (no hardcoded background) so both a dark app (Terminal) and
+a light app (Photos) render correctly; each feature's root component owns
+its own background. Not yet built: z-order-on-focus, minimize/maximize
+(traffic lights are wired for close only), persistence, boot sequence.
 
-**Terminal (Phase 4, functionally complete, content placeholders
+**Terminal (Phase 4, functionally complete, one content placeholder
 pending)**: `src/features/terminal/` — command registry (`services/
 commands/registry.ts`) dispatches fixed-phrase and prefix commands (`help`,
 `whoami`, `show techstack`, `github stats` via live GitHub REST API +
 React Query, `ls`, `projects`, `resume` (opens the Resume window),
-`clear`, `history` with ↑/↓ recall, `date`, `echo`, `blog` stub for the
-future Safari blog) plus a regex-based easter-egg matcher for
-destructive/sudo-style input. UI: `TerminalApp` (scrollable dark body,
-one-time typewriter boot line respecting `prefers-reduced-motion`),
-`PromptLine` (blinking block caret via a real hidden `<input>` overlaid
-with styled text — keeps native focus/selection/paste), `OutputRenderer`
-(text/success/error/link/table/profile line types). Window title mirrors
-the active command's context (`Tech Stack — zsh — 80×24` etc.), matching
-the exported Terminal Figma frames combined with real macOS Terminal.app's
-`user — shell — cols×rows` convention (per user reference screenshot).
-**Two content placeholders block calling this phase fully done:**
-`whoami`'s bio fields (`services/commands/whoami.ts`) are `<TODO>` — a
-LinkedIn fetch was attempted and blocked (HTTP 999 from LinkedIn's
-anti-scraping, and the LinkedIn MCP connector isn't authorized in this
-environment) — and `github stats`' username (`services/commands/
-githubStats.ts`, `GITHUB_USERNAME`) is hardcoded to GitHub's `octocat` demo
-account pending the real handle.
+`clear`, `history` with ↑/↓ recall and a caret that correctly tracks
+`selectionStart` (not just end-of-string), `date`, `echo`, `blog` stub for
+the future Safari blog) plus a regex-based easter-egg matcher for
+destructive/sudo-style input. `github stats` is live against the real
+`gsashish-code` GitHub handle. UI: `TerminalApp`, `PromptLine` (blinking
+block caret via a real hidden `<input>` overlaid with styled text),
+`OutputRenderer` (text/success/error/link/table/profile line types).
+Window title mirrors the active command's context (`Tech Stack — zsh —
+80×24` etc.). **One placeholder remains**: `whoami`'s bio fields
+(`services/commands/whoami.ts`) are `<TODO>` — a LinkedIn fetch was
+attempted and blocked (HTTP 999 from LinkedIn's anti-scraping, and the
+LinkedIn MCP connector isn't authorized in this environment).
+
+**Photos (Phase 6, complete for the available content)**:
+`src/features/photos/` — same feature-first shape as Terminal
+(`types/constants/services/components/index.ts`), reusing `WindowWrapper`
+and the `setWindowTitle` store action for a title bar that reflects the
+active sidebar section, same as Terminal's command-context title. Sidebar
+(Library/Memories/Places/People/Favorites, Lucide icons, local `useState`
+— no store needed, unlike Terminal, since there's nothing cross-feature to
+coordinate) + toolbar (mail/search) + a date-grouped photo grid
+(`gsashish1.png`–`gsashish6.png`, two groups) matching the exported "Photo
+Dump" frame's hero-tile-plus-smaller-row layout. Non-Library sections show
+a friendly empty state rather than a dead end. No click-to-preview
+(Quick Look is Finder's job per the spec, not Photos').
 
 Also added since original setup: `@tanstack/react-query` (first use is
 Terminal's GitHub stats fetch), with `QueryClientProvider` wired in
-`src/main.tsx` via `src/app/providers/`. Hooks/utils that were briefly
-colocated per-component (`src/components/*/hooks|utils/`) were
-consolidated into global `src/hooks/` and `src/utils/`, imported via the
-`#hooks/*`/`#utils/*` aliases — this repo's convention is centralized
-hooks/utils, not per-component colocation.
+`src/main.tsx` via `src/app/providers/`. `lucide-react` is now used for
+window-chrome and Photos icons. Hooks/utils that were briefly colocated
+per-component (`src/components/*/hooks|utils/`) were consolidated into
+global `src/hooks/` and `src/utils/`, imported via the `#hooks/*`/`#utils/*`
+aliases — this repo's convention is centralized hooks/utils, not
+per-component colocation.
 
-Next step: fill in the two Terminal placeholders above when available,
-then either continue Phase 1 properly (drag/resize/z-order/minimize/
-maximize/persistence — WindowChrome and the window store are the
-foundation) or move on to Phase 3 (Finder).
+Next step: fill in Terminal's `whoami` placeholder when bio facts are
+available, then either continue Phase 1 properly (z-order-on-focus,
+minimize/maximize, persistence) or move on to Phase 3 (Finder) or Phase 5
+(Safari).

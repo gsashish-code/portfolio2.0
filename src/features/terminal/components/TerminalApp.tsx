@@ -22,7 +22,7 @@ function TerminalApp() {
     <div
       ref={scrollRef}
       onClick={() => inputRef.current?.focus()}
-      className="h-full w-full overflow-y-auto p-4 font-mono text-[13px] leading-relaxed text-[#e5e5e5]"
+      className="dark-scrollbar h-full w-full overflow-y-auto bg-black p-4 font-mono text-[13px] leading-relaxed text-[#e5e5e5]"
     >
       {output.length === 0 && <BootLine />}
       <OutputRenderer lines={output} />
