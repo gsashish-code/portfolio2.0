@@ -1,10 +1,11 @@
+import NavBar from '#components/NavBar'
 import './App.css'
 
 function App() {
   return (
-    <section id="center">
-      <h1>Welcome to Den</h1>
-    </section>
+    <main>
+      <NavBar />
+    </main>
   )
 }
 
