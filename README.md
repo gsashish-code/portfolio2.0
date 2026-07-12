@@ -1,75 +1,92 @@
-# React + TypeScript + Vite
+# Portfolio OS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal portfolio built as a simulated operating system rather than a
+traditional website — boot into a desktop, open "apps" (About, Projects,
+Terminal, Finder, Safari, VS Code, ...) in draggable windows, complete with a
+dock, spotlight search, and a real window manager.
 
-Currently, two official plugins are available:
+> Status: early scaffold. Tooling and the OS shell haven't been built yet —
+> see [Roadmap](#roadmap).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech stack
 
-## React Compiler
+- **Framework**: React 19, TypeScript, Vite
+- **Styling**: Tailwind CSS v4
+- **Animation**: GSAP (ScrollTrigger, FLIP, MotionPath, Observer, SplitText),
+  Framer Motion where GSAP doesn't fit
+- **3D**: Three.js + React Three Fiber
+- **State**: Zustand, React Query
+- **Routing / forms**: React Router, React Hook Form + Zod
+- **Scroll / motion**: Lenis, Motion Values
+- **Persistence**: IndexedDB, localStorage
+- **Tooling**: ESLint, Prettier, Husky, Vitest, Playwright, Storybook, Vite
+  PWA
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting started
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Script            | Purpose                       |
+| ----------------- | ------------------------------ |
+| `npm run dev`     | Start the Vite dev server      |
+| `npm run build`   | Type-check and build for prod  |
+| `npm run preview` | Preview the production build   |
+| `npm run lint`    | Run ESLint                     |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Architecture
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Feature-first, organized as an OS kernel plus a set of self-contained "apps":
 
 ```
+src/
+  app/          # app shell, providers, router wiring
+  core/         # window manager, boot sequence, global chrome
+  components/   # shared design-system primitives
+  features/     # one folder per app (finder, terminal, safari, ...)
+    <feature>/
+      components/
+      hooks/
+      services/
+      types/
+      utils/
+      index.ts  # barrel export — the feature's public API
+  hooks/        # cross-feature hooks
+  lib/          # thin wrappers around third-party libs
+  services/     # cross-feature services (persistence, analytics)
+  stores/       # zustand stores
+  animations/   # reusable GSAP timelines/utilities
+  workers/
+  types/
+  utils/
+  routes/
+```
+
+Full product spec, engineering standards, and the phased build plan live in
+[`CLAUDE.md`](./CLAUDE.md).
+
+## Roadmap
+
+Built incrementally, one phase at a time:
+
+0. Tooling — Tailwind, lint/format/hooks, test/E2E/Storybook setup
+1. OS kernel — window manager, boot sequence, state persistence
+2. Desktop chrome — wallpaper, menu bar, dock, control center, theming
+3. Spotlight search
+4. Finder
+5. Terminal
+6. Safari (custom browser chrome hosting portfolio pages)
+7. VS Code (Monaco-based editor hosting project content)
+8. Content apps — Projects, Experience, Resume, GitHub/LeetCode dashboards,
+   Photography, Music Player, Activity Monitor, AI Chat
+9. Three.js background/effects
+10. GSAP animation system + polish pass
+11. Performance, accessibility, mobile, testing, CI/CD, deploy
+
+See [`CLAUDE.md`](./CLAUDE.md) for the detailed spec behind each phase.
+
+## License
+
+Personal project — all rights reserved.
