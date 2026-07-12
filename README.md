@@ -1,11 +1,13 @@
 # Portfolio OS
 
 A personal portfolio built as a simulated operating system rather than a
-traditional website — boot into a desktop, open "apps" (About, Projects,
-Terminal, Finder, Safari, VS Code, ...) in draggable windows, complete with a
-dock, spotlight search, and a real window manager.
+traditional website — boot into a desktop, open "apps" (Finder, Safari,
+Photos, Terminal, About Me, Contact, Resume, ...) in draggable windows,
+complete with a dock, menu bar, and a real window manager. Design source of
+truth is a [Figma file](./CLAUDE.md#design-reference) exported into
+[`design/`](./design).
 
-> Status: early scaffold. Tooling and the OS shell haven't been built yet —
+> Status: Phase 0 (tooling) complete. The OS shell hasn't been built yet —
 > see [Roadmap](#roadmap).
 
 ## Tech stack
@@ -29,12 +31,20 @@ npm install
 npm run dev
 ```
 
-| Script            | Purpose                       |
-| ----------------- | ------------------------------ |
-| `npm run dev`     | Start the Vite dev server      |
-| `npm run build`   | Type-check and build for prod  |
-| `npm run preview` | Preview the production build   |
-| `npm run lint`    | Run ESLint                     |
+| Script                    | Purpose                           |
+| ------------------------- | --------------------------------- |
+| `npm run dev`             | Start the Vite dev server         |
+| `npm run build`           | Type-check and build for prod     |
+| `npm run preview`         | Preview the production build      |
+| `npm run lint`            | Run ESLint                        |
+| `npm run format`          | Format the repo with Prettier     |
+| `npm run format:check`    | Check formatting without writing  |
+| `npm run typecheck`       | Type-check the whole repo         |
+| `npm test`                | Run unit/component tests (Vitest) |
+| `npm run test:watch`      | Vitest in watch mode              |
+| `npm run test:e2e`        | Run Playwright E2E tests          |
+| `npm run storybook`       | Start Storybook locally           |
+| `npm run build-storybook` | Build the static Storybook site   |
 
 ## Architecture
 

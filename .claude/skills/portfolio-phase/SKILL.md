@@ -1,6 +1,6 @@
 ---
 name: portfolio-phase
-description: Start or continue the next build phase of the Portfolio OS project (this repo's OS-style personal portfolio). Use when the user asks to build/continue/work on the portfolio, a specific phase, or a specific app/feature of it (dock, window manager, terminal, finder, safari, VS Code app, Three.js background, GSAP polish, etc).
+description: Start or continue the next build phase of the Portfolio OS project (this repo's OS-style personal portfolio). Use when the user asks to build/continue/work on the portfolio, a specific phase, or a specific app/feature of it (dock, window manager, terminal, finder, safari, photos, about me, contact, resume viewer, GSAP polish, etc).
 ---
 
 # Portfolio OS — phase workflow
@@ -9,6 +9,14 @@ This repo is building a personal portfolio that simulates an operating
 system, to a Staff Frontend Engineer quality bar. The full product spec,
 tech stack, architecture rules, and phase roadmap live in `CLAUDE.md` at the
 repo root — read it in full before doing anything else in this skill.
+
+There is a Figma file that is the visual source of truth for this project
+(link + access notes in `CLAUDE.md`'s "Design reference" section). Exported
+frames live in `design/` at the repo root — for any slice with a visible UI
+surface, check that folder (Read the relevant image) before inventing
+visual details. If the frame you need isn't there, ask the user to export
+it rather than guessing colors, spacing, or layout that Figma already
+defines.
 
 ## Steps
 
