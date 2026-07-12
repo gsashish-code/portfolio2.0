@@ -2,9 +2,10 @@ import { useRef, useState } from 'react'
 
 import dayjs from 'dayjs'
 
-import SearchOverlay from '#components/SearchOverlay'
-import WifiPopover from '#components/WifiPopover'
 import { navIcons, navLinks } from '#constants/index'
+
+import SearchOverlay from './SearchOverlay'
+import WifiPopover from './WifiPopover'
 
 function NavBar() {
   const [isWifiOpen, setIsWifiOpen] = useState(false)
