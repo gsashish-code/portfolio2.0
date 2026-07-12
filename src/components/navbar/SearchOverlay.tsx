@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 
-import { useDraggablePosition } from './hooks/useDraggablePosition'
-import { usePopoverDismiss } from './hooks/usePopoverDismiss'
-import { usePopoverEntrance } from './hooks/usePopoverEntrance'
-import { filterSearchableItems } from './utils/searchItems'
+import { useDraggablePosition } from '#hooks/useDraggablePosition'
+import { usePopoverDismiss } from '#hooks/usePopoverDismiss'
+import { usePopoverEntrance } from '#hooks/usePopoverEntrance'
+import { filterSearchableItems } from '#utils/searchItems'
 
 interface SearchOverlayProps {
   anchorRef: RefObject<HTMLElement | null>

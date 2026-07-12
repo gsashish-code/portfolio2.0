@@ -1,11 +1,10 @@
 import { useRef, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 
+import { useAnchoredPosition } from '#hooks/useAnchoredPosition'
 import { useNetworkStatus } from '#hooks/useNetworkStatus'
-
-import { useAnchoredPosition } from './hooks/useAnchoredPosition'
-import { usePopoverDismiss } from './hooks/usePopoverDismiss'
-import { usePopoverEntrance } from './hooks/usePopoverEntrance'
+import { usePopoverDismiss } from '#hooks/usePopoverDismiss'
+import { usePopoverEntrance } from '#hooks/usePopoverEntrance'
 
 interface WifiPopoverProps {
   anchorRef: RefObject<HTMLElement | null>
