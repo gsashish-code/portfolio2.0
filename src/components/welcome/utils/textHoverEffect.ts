@@ -43,8 +43,8 @@ function animateLetterWeight(
 export function setupTextHoverEffect(
   container: HTMLElement | null,
   variant: TextWeightVariant,
-): (() => void) | undefined {
-  if (!container) return undefined
+): () => void {
+  if (!container) return () => {}
 
   const letters = Array.from(container.querySelectorAll('span'))
   const { min, max, default: baseWeight } = FONT_WEIGHTS[variant]
