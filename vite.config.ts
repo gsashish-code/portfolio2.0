@@ -18,7 +18,29 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '#animations': fileURLToPath(
+        new URL('./src/animations', import.meta.url),
+      ),
+      '#app': fileURLToPath(new URL('./src/app', import.meta.url)),
+      '#assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
+      '#components': fileURLToPath(
+        new URL('./src/components', import.meta.url),
+      ),
+      '#constants': fileURLToPath(new URL('./src/constants', import.meta.url)),
+      '#core': fileURLToPath(new URL('./src/core', import.meta.url)),
+      '#features': fileURLToPath(new URL('./src/features', import.meta.url)),
+      '#hoc': fileURLToPath(new URL('./src/hoc', import.meta.url)),
+      '#hooks': fileURLToPath(new URL('./src/hooks', import.meta.url)),
+      '#lib': fileURLToPath(new URL('./src/lib', import.meta.url)),
+      '#routes': fileURLToPath(new URL('./src/routes', import.meta.url)),
+      '#services': fileURLToPath(new URL('./src/services', import.meta.url)),
+      '#store': fileURLToPath(new URL('./src/store', import.meta.url)),
+      '#stores': fileURLToPath(new URL('./src/stores', import.meta.url)),
+      '#test': fileURLToPath(new URL('./src/test', import.meta.url)),
+      '#types': fileURLToPath(new URL('./src/types', import.meta.url)),
+      '#utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
+      '#windows': fileURLToPath(new URL('./src/windows', import.meta.url)),
+      '#workers': fileURLToPath(new URL('./src/workers', import.meta.url)),
     },
   },
   test: {
