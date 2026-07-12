@@ -6,6 +6,8 @@ export interface WindowState {
   isOpen: boolean
   zIndex: number
   data: unknown
+  /** Overrides the window chrome's default title (e.g. Terminal's active-command context). */
+  title?: string
 }
 
 interface WindowStore {
@@ -14,6 +16,7 @@ interface WindowStore {
   openWindow: (windowId: string, data: unknown) => void
   closeWindow: (windowId: string) => void
   focusWindow: (windowId: string) => void
+  setWindowTitle: (windowId: string, title: string | undefined) => void
 }
 
 const useWindowStore = create<WindowStore>()(
@@ -46,6 +49,11 @@ const useWindowStore = create<WindowStore>()(
           window.zIndex = state.nextZIndex
           state.nextZIndex += 1
         }
+      }),
+    setWindowTitle: (windowId, title) =>
+      set((state) => {
+        const window = state.windows[windowId]
+        if (window) window.title = title
       }),
   })),
 )

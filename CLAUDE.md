@@ -248,21 +248,58 @@ techstack` / `github stats` and friends).
 
 ## Current Status
 
-Phase 0 complete. Vite + React 19 + TypeScript scaffold with Tailwind CSS
-v4 wired via `@tailwindcss/vite`. `App.tsx`/`App.css`/`index.css` are still
-just a placeholder ("Welcome to Den") — no real UI built yet. Figma frames
-exported into `design/`.
+Phase 0 tooling complete (unchanged from original setup). Well past Phase 0
+in practice — this section had gone stale across several sessions; the
+notes below reflect the actual working tree.
 
-Tooling in place: path alias `@/*` → `src/*` (tsconfig + Vite); Prettier +
-`eslint-config-prettier`; Husky pre-commit running `lint-staged`
-(eslint --fix + prettier on staged files); Vitest + React Testing Library
-(`npm test`) with a passing smoke test on `App`; Playwright (`npm run
-test:e2e`) with a passing smoke test that boots the dev server; Storybook
-(`npm run storybook` / `build-storybook`) configured with the a11y, docs,
-and vitest addons — no stories yet, first one lands with the first real
-component. Base `src/` feature-first folders exist
-(app/core/components/features/hooks/lib/services/stores/animations/workers/types/utils/routes)
-as empty `.gitkeep` placeholders, populated as each phase needs them.
+**Desktop chrome (Phase 2, partial)**: `NavBar` (menu bar, wifi/search
+popovers with draggable Spotlight-style search and live `useNetworkStatus`),
+`Welcome` (hero text with per-letter magnetic hover), and `Dock` (6 icons,
+GSAP magnification, opens/closes windows via the window store) are built
+under `src/components/`. Light/dark mode toggle and desktop icons are not
+built yet.
 
-Next step: Phase 1 (OS kernel — window manager, boot sequence, Zustand
-stores, persistence).
+**OS kernel (Phase 1, partial)**: `src/store/window.ts` is a Zustand+immer
+store keyed by window id (`isOpen`/`zIndex`/`data`/optional `title`
+override), with `openWindow`/`closeWindow`/`focusWindow`/`setWindowTitle`.
+`src/core/window/WindowChrome.tsx` is the shared window shell (traffic
+lights with hover glyphs, dynamic title, static centered position — no
+drag/resize/z-order/minimize/maximize yet, no persistence). `src/hoc/
+WindowWrapper.tsx` composes a feature's root component with `WindowChrome`,
+gated on the store's `isOpen`. Boot sequence not built.
+
+**Terminal (Phase 4, functionally complete, content placeholders
+pending)**: `src/features/terminal/` — command registry (`services/
+commands/registry.ts`) dispatches fixed-phrase and prefix commands (`help`,
+`whoami`, `show techstack`, `github stats` via live GitHub REST API +
+React Query, `ls`, `projects`, `resume` (opens the Resume window),
+`clear`, `history` with ↑/↓ recall, `date`, `echo`, `blog` stub for the
+future Safari blog) plus a regex-based easter-egg matcher for
+destructive/sudo-style input. UI: `TerminalApp` (scrollable dark body,
+one-time typewriter boot line respecting `prefers-reduced-motion`),
+`PromptLine` (blinking block caret via a real hidden `<input>` overlaid
+with styled text — keeps native focus/selection/paste), `OutputRenderer`
+(text/success/error/link/table/profile line types). Window title mirrors
+the active command's context (`Tech Stack — zsh — 80×24` etc.), matching
+the exported Terminal Figma frames combined with real macOS Terminal.app's
+`user — shell — cols×rows` convention (per user reference screenshot).
+**Two content placeholders block calling this phase fully done:**
+`whoami`'s bio fields (`services/commands/whoami.ts`) are `<TODO>` — a
+LinkedIn fetch was attempted and blocked (HTTP 999 from LinkedIn's
+anti-scraping, and the LinkedIn MCP connector isn't authorized in this
+environment) — and `github stats`' username (`services/commands/
+githubStats.ts`, `GITHUB_USERNAME`) is hardcoded to GitHub's `octocat` demo
+account pending the real handle.
+
+Also added since original setup: `@tanstack/react-query` (first use is
+Terminal's GitHub stats fetch), with `QueryClientProvider` wired in
+`src/main.tsx` via `src/app/providers/`. Hooks/utils that were briefly
+colocated per-component (`src/components/*/hooks|utils/`) were
+consolidated into global `src/hooks/` and `src/utils/`, imported via the
+`#hooks/*`/`#utils/*` aliases — this repo's convention is centralized
+hooks/utils, not per-component colocation.
+
+Next step: fill in the two Terminal placeholders above when available,
+then either continue Phase 1 properly (drag/resize/z-order/minimize/
+maximize/persistence — WindowChrome and the window store are the
+foundation) or move on to Phase 3 (Finder).

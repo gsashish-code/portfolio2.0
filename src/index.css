@@ -19,6 +19,17 @@ body {
   --breakpoint-3xl: 1920px;
 }
 
+@keyframes terminal-caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
 @utility flex-center {
   @apply flex items-center justify-center;
 }
