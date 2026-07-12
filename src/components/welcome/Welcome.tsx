@@ -15,8 +15,8 @@ function Welcome() {
       'subtitle',
     )
     return () => {
-      cleanupTitle?.()
-      cleanupSubtitle?.()
+      cleanupTitle()
+      cleanupSubtitle()
     }
   }, [])
 
