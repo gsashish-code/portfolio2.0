@@ -1,4 +1,4 @@
-import { NavBar, Welcome } from '#components/index'
+import { NavBar, Welcome, Dock } from '#components/index'
 import './App.css'
 
 function App() {
@@ -6,6 +6,7 @@ function App() {
     <main>
       <NavBar />
       <Welcome />
+      <Dock />
     </main>
   )
 }
