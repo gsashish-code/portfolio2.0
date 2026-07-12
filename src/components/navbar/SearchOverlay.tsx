@@ -1,23 +1,15 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type PointerEvent as ReactPointerEvent,
-  type RefObject,
-} from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 
-import { dockApps, navLinks } from '#constants/index'
+import { useDraggablePosition } from './hooks/useDraggablePosition'
+import { usePopoverDismiss } from './hooks/usePopoverDismiss'
+import { usePopoverEntrance } from './hooks/usePopoverEntrance'
+import { filterSearchableItems } from './utils/searchItems'
 
 interface SearchOverlayProps {
   anchorRef: RefObject<HTMLElement | null>
   onClose: () => void
 }
-
-const SEARCHABLE_ITEMS = [
-  ...navLinks.map(({ id, name }) => ({ id: `nav-${id}`, name })),
-  ...dockApps.map(({ id, name }) => ({ id: `dock-${id}`, name })),
-]
 
 const QUICK_ACTIONS = [
   { id: 'apps', icon: '/icons/work.svg', label: 'Apps' },
@@ -31,84 +23,32 @@ const BAR_WIDTH = 360
 function SearchOverlay({ anchorRef, onClose }: SearchOverlayProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const dragOffset = useRef<{ x: number; y: number } | null>(null)
 
   const [query, setQuery] = useState('')
-  const [isDragging, setIsDragging] = useState(false)
-  const [position, setPosition] = useState(() => ({
-    x: Math.max(16, window.innerWidth / 2 - BAR_WIDTH / 2),
-    y: window.innerHeight * 0.22,
-  }))
+  const { position, isDragging, startDrag } = useDraggablePosition(
+    containerRef,
+    () => ({
+      x: Math.max(16, window.innerWidth / 2 - BAR_WIDTH / 2),
+      y: window.innerHeight * 0.22,
+    }),
+  )
+
+  usePopoverEntrance(containerRef)
+  usePopoverDismiss(containerRef, anchorRef, onClose)
 
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node
-      if (containerRef.current?.contains(target)) return
-      if (anchorRef.current?.contains(target)) return
-      onClose()
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [anchorRef, onClose])
-
-  useEffect(() => {
-    if (!isDragging) return
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (!dragOffset.current) return
-      setPosition({
-        x: event.clientX - dragOffset.current.x,
-        y: event.clientY - dragOffset.current.y,
-      })
-    }
-    const stopDragging = () => {
-      dragOffset.current = null
-      setIsDragging(false)
-    }
-
-    window.addEventListener('pointermove', handlePointerMove)
-    window.addEventListener('pointerup', stopDragging)
-    return () => {
-      window.removeEventListener('pointermove', handlePointerMove)
-      window.removeEventListener('pointerup', stopDragging)
-    }
-  }, [isDragging])
-
-  const handleDragStart = (event: ReactPointerEvent<HTMLDivElement>) => {
-    const rect = containerRef.current?.getBoundingClientRect()
-    if (!rect) return
-    dragOffset.current = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
-    }
-    setIsDragging(true)
-  }
-
   const trimmedQuery = query.trim()
-  const results = trimmedQuery
-    ? SEARCHABLE_ITEMS.filter(({ name }) =>
-        name.toLowerCase().includes(trimmedQuery.toLowerCase()),
-      )
-    : []
+  const results = filterSearchableItems(query)
 
   return createPortal(
     <div
       ref={containerRef}
       role="dialog"
       aria-label="Search"
-      onPointerDown={handleDragStart}
+      onPointerDown={startDrag}
       className={`fixed z-50 flex items-start gap-3 ${
         isDragging ? 'cursor-grabbing' : 'cursor-grab'
       }`}

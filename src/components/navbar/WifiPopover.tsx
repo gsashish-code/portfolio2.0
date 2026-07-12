@@ -1,7 +1,11 @@
-import { useLayoutEffect, useRef, useState, type RefObject } from 'react'
+import { useRef, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 
 import { useNetworkStatus } from '#hooks/useNetworkStatus'
+
+import { useAnchoredPosition } from './hooks/useAnchoredPosition'
+import { usePopoverDismiss } from './hooks/usePopoverDismiss'
+import { usePopoverEntrance } from './hooks/usePopoverEntrance'
 
 interface WifiPopoverProps {
   anchorRef: RefObject<HTMLElement | null>
@@ -12,46 +16,10 @@ function WifiPopover({ anchorRef, onClose }: WifiPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null)
   const { online, supported, effectiveType, downlinkMbps, rttMs } =
     useNetworkStatus()
-  const [position, setPosition] = useState<{
-    top: number
-    right: number
-  } | null>(null)
+  const position = useAnchoredPosition(anchorRef)
 
-  useLayoutEffect(() => {
-    const updatePosition = () => {
-      const rect = anchorRef.current?.getBoundingClientRect()
-      if (!rect) return
-      setPosition({
-        top: rect.bottom + 8,
-        right: window.innerWidth - rect.right,
-      })
-    }
-    updatePosition()
-    window.addEventListener('resize', updatePosition)
-    window.addEventListener('scroll', updatePosition, true)
-    return () => {
-      window.removeEventListener('resize', updatePosition)
-      window.removeEventListener('scroll', updatePosition, true)
-    }
-  }, [anchorRef])
-
-  useLayoutEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node
-      if (popoverRef.current?.contains(target)) return
-      if (anchorRef.current?.contains(target)) return
-      onClose()
-    }
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [anchorRef, onClose])
+  usePopoverEntrance(popoverRef, position !== null)
+  usePopoverDismiss(popoverRef, anchorRef, onClose)
 
   if (!position) return null
 
