@@ -1,8 +1,8 @@
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
 
-import { renderAnimatedText } from './utils/renderAnimatedText'
-import { setupTextHoverEffect } from './utils/textHoverEffect'
+import { renderAnimatedText } from '#utils/renderAnimatedText'
+import { setupTextHoverEffect } from '#utils/textHoverEffect'
 
 function Welcome() {
   const titleRef = useRef<HTMLHeadingElement>(null)

@@ -234,7 +234,7 @@ and only if it doesn't compromise the performance bar below.
 techstack` / `github stats` and friends).
 - [ ] **Phase 5** — Safari app (browser chrome, blog post list, renders
       project site bookmarks).
-- [ ] **Phase 6** — Photos app (sidebar, date-grouped photo grid).
+- [x] **Phase 6** — Photos app (sidebar, date-grouped photo grid).
 - [ ] **Phase 7** — About Me (Notes-style) + Contact Me (popup card) apps.
 - [ ] **Phase 8** — Resume PDF viewer.
 - [ ] **Phase 9** — Mobile responsive pass across all apps built so far,
@@ -248,21 +248,76 @@ techstack` / `github stats` and friends).
 
 ## Current Status
 
-Phase 0 complete. Vite + React 19 + TypeScript scaffold with Tailwind CSS
-v4 wired via `@tailwindcss/vite`. `App.tsx`/`App.css`/`index.css` are still
-just a placeholder ("Welcome to Den") — no real UI built yet. Figma frames
-exported into `design/`.
+Phase 0 tooling complete (unchanged from original setup). Well past Phase 0
+in practice — this section had gone stale across several sessions; the
+notes below reflect the actual working tree.
 
-Tooling in place: path alias `@/*` → `src/*` (tsconfig + Vite); Prettier +
-`eslint-config-prettier`; Husky pre-commit running `lint-staged`
-(eslint --fix + prettier on staged files); Vitest + React Testing Library
-(`npm test`) with a passing smoke test on `App`; Playwright (`npm run
-test:e2e`) with a passing smoke test that boots the dev server; Storybook
-(`npm run storybook` / `build-storybook`) configured with the a11y, docs,
-and vitest addons — no stories yet, first one lands with the first real
-component. Base `src/` feature-first folders exist
-(app/core/components/features/hooks/lib/services/stores/animations/workers/types/utils/routes)
-as empty `.gitkeep` placeholders, populated as each phase needs them.
+**Desktop chrome (Phase 2, partial)**: `NavBar` (menu bar, wifi/search
+popovers with draggable Spotlight-style search and live `useNetworkStatus`),
+`Welcome` (hero text with per-letter magnetic hover), and `Dock` (6 icons,
+GSAP magnification, opens/closes windows via the window store) are built
+under `src/components/`. Light/dark mode toggle and desktop icons are not
+built yet.
 
-Next step: Phase 1 (OS kernel — window manager, boot sequence, Zustand
-stores, persistence).
+**OS kernel (Phase 1, partial)**: `src/store/window.ts` is a Zustand+immer
+store keyed by window id (`isOpen`/`zIndex`/`data`/optional `title`
+override), with `openWindow`/`closeWindow`/`focusWindow`/`setWindowTitle`.
+`src/hoc/WindowWrapper.tsx` is the single place that owns the entire window
+shell for every app — chrome (dark title bar, Lucide `X`/`Minus`/`Plus`
+traffic lights, hover-reveal on the whole cluster), dragging (title bar as
+the GSAP Draggable trigger, bounded to the viewport), resizing (corner grip,
+also GSAP Draggable, resizes the box via cumulative drag delta rather than
+moving the grip), and open/close animation (GSAP scale+fade,
+`src/animations/window.ts`, respects `prefers-reduced-motion`). There was
+briefly a separate `WindowChrome` component — folded back into
+`WindowWrapper` since it was the only consumer and the split added
+indirection without reuse benefit. The window's content slot is
+theme-agnostic (no hardcoded background) so both a dark app (Terminal) and
+a light app (Photos) render correctly; each feature's root component owns
+its own background. Not yet built: z-order-on-focus, minimize/maximize
+(traffic lights are wired for close only), persistence, boot sequence.
+
+**Terminal (Phase 4, functionally complete, one content placeholder
+pending)**: `src/features/terminal/` — command registry (`services/
+commands/registry.ts`) dispatches fixed-phrase and prefix commands (`help`,
+`whoami`, `show techstack`, `github stats` via live GitHub REST API +
+React Query, `ls`, `projects`, `resume` (opens the Resume window),
+`clear`, `history` with ↑/↓ recall and a caret that correctly tracks
+`selectionStart` (not just end-of-string), `date`, `echo`, `blog` stub for
+the future Safari blog) plus a regex-based easter-egg matcher for
+destructive/sudo-style input. `github stats` is live against the real
+`gsashish-code` GitHub handle. UI: `TerminalApp`, `PromptLine` (blinking
+block caret via a real hidden `<input>` overlaid with styled text),
+`OutputRenderer` (text/success/error/link/table/profile line types).
+Window title mirrors the active command's context (`Tech Stack — zsh —
+80×24` etc.). **One placeholder remains**: `whoami`'s bio fields
+(`services/commands/whoami.ts`) are `<TODO>` — a LinkedIn fetch was
+attempted and blocked (HTTP 999 from LinkedIn's anti-scraping, and the
+LinkedIn MCP connector isn't authorized in this environment).
+
+**Photos (Phase 6, complete for the available content)**:
+`src/features/photos/` — same feature-first shape as Terminal
+(`types/constants/services/components/index.ts`), reusing `WindowWrapper`
+and the `setWindowTitle` store action for a title bar that reflects the
+active sidebar section, same as Terminal's command-context title. Sidebar
+(Library/Memories/Places/People/Favorites, Lucide icons, local `useState`
+— no store needed, unlike Terminal, since there's nothing cross-feature to
+coordinate) + toolbar (mail/search) + a date-grouped photo grid
+(`gsashish1.png`–`gsashish6.png`, two groups) matching the exported "Photo
+Dump" frame's hero-tile-plus-smaller-row layout. Non-Library sections show
+a friendly empty state rather than a dead end. No click-to-preview
+(Quick Look is Finder's job per the spec, not Photos').
+
+Also added since original setup: `@tanstack/react-query` (first use is
+Terminal's GitHub stats fetch), with `QueryClientProvider` wired in
+`src/main.tsx` via `src/app/providers/`. `lucide-react` is now used for
+window-chrome and Photos icons. Hooks/utils that were briefly colocated
+per-component (`src/components/*/hooks|utils/`) were consolidated into
+global `src/hooks/` and `src/utils/`, imported via the `#hooks/*`/`#utils/*`
+aliases — this repo's convention is centralized hooks/utils, not
+per-component colocation.
+
+Next step: fill in Terminal's `whoami` placeholder when bio facts are
+available, then either continue Phase 1 properly (z-order-on-focus,
+minimize/maximize, persistence) or move on to Phase 3 (Finder) or Phase 5
+(Safari).
