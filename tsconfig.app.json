@@ -18,7 +18,25 @@
 
     /* Path aliases */
     "paths": {
-      "@/*": ["./src/*"]
+      "#animations/*": ["./src/animations/*"],
+      "#app/*": ["./src/app/*"],
+      "#assets/*": ["./src/assets/*"],
+      "#components/*": ["./src/components/*"],
+      "#constants/*": ["./src/constants/*"],
+      "#core/*": ["./src/core/*"],
+      "#features/*": ["./src/features/*"],
+      "#hoc/*": ["./src/hoc/*"],
+      "#hooks/*": ["./src/hooks/*"],
+      "#lib/*": ["./src/lib/*"],
+      "#routes/*": ["./src/routes/*"],
+      "#services/*": ["./src/services/*"],
+      "#store/*": ["./src/store/*"],
+      "#stores/*": ["./src/stores/*"],
+      "#test/*": ["./src/test/*"],
+      "#types/*": ["./src/types/*"],
+      "#utils/*": ["./src/utils/*"],
+      "#windows/*": ["./src/windows/*"],
+      "#workers/*": ["./src/workers/*"]
     },
 
     /* Linting */
