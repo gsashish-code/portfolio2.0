@@ -4,14 +4,17 @@ import dayjs from 'dayjs'
 
 import { navIcons, navLinks } from '#constants/index'
 
+import ControlCenterPopover from './ControlCenterPopover'
 import SearchOverlay from './SearchOverlay'
 import WifiPopover from './WifiPopover'
 
 function NavBar() {
   const [isWifiOpen, setIsWifiOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isControlCenterOpen, setIsControlCenterOpen] = useState(false)
   const wifiRef = useRef<HTMLLIElement>(null)
   const searchRef = useRef<HTMLLIElement>(null)
+  const controlCenterRef = useRef<HTMLLIElement>(null)
 
   const handleIconClick = (type: (typeof navIcons)[number]['type']) => {
     switch (type) {
@@ -21,8 +24,11 @@ function NavBar() {
       case 'search':
         setIsSearchOpen((prev) => !prev)
         break
+      case 'control-center':
+        setIsControlCenterOpen((prev) => !prev)
+        break
       default:
-        // profile / control-center: planned in a later phase
+        // profile: planned in a later phase
         break
     }
   }
@@ -48,7 +54,9 @@ function NavBar() {
                 ? wifiRef
                 : type === 'search'
                   ? searchRef
-                  : undefined
+                  : type === 'control-center'
+                    ? controlCenterRef
+                    : undefined
 
             return (
               <li key={id} ref={anchorRef}>
@@ -63,6 +71,12 @@ function NavBar() {
                   <WifiPopover
                     anchorRef={wifiRef}
                     onClose={() => setIsWifiOpen(false)}
+                  />
+                )}
+                {type === 'control-center' && isControlCenterOpen && (
+                  <ControlCenterPopover
+                    anchorRef={controlCenterRef}
+                    onClose={() => setIsControlCenterOpen(false)}
                   />
                 )}
               </li>

@@ -1,6 +1,7 @@
-import { NavBar, Welcome, Dock } from '#components/index'
+import { NavBar, Welcome, Dock, ScreenDimOverlay } from '#components/index'
 import Photos from '#features/photos'
 import Terminal from '#features/terminal'
+import { useThemeSync } from '#hooks/useThemeSync'
 import gsap from 'gsap'
 import { Draggable } from 'gsap/Draggable'
 import './App.css'
@@ -8,6 +9,8 @@ import './App.css'
 gsap.registerPlugin(Draggable)
 
 function App() {
+  useThemeSync()
+
   return (
     <main>
       <NavBar />
@@ -15,6 +18,7 @@ function App() {
       <Dock />
       <Terminal />
       <Photos />
+      <ScreenDimOverlay />
     </main>
   )
 }

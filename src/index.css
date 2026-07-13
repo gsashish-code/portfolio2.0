@@ -2,6 +2,9 @@
 
 @import 'tailwindcss';
 
+/* Class-based dark mode (Control Center's Dark/Light toggle), not the OS-level media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 html,
 body {
   width: 100dvw;
@@ -91,7 +94,7 @@ body {
   }
 
   nav {
-    @apply flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none;
+    @apply flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none text-black dark:bg-black/40 dark:text-white;
 
     div {
       @apply flex items-center max-sm:w-full max-sm:justify-center gap-5;
@@ -110,7 +113,7 @@ body {
     }
 
     time {
-      @apply text-sm font-medium text-black;
+      @apply text-sm font-medium;
     }
   }
 }
@@ -118,6 +121,10 @@ body {
 @layer components {
   .icon {
     @apply p-1 hover:bg-gray-200 rounded hover:cursor-default;
+  }
+
+  .icon-hover {
+    @apply opacity-90 transition-opacity hover:opacity-60 dark:invert;
   }
 
   #welcome {
@@ -133,10 +140,15 @@ body {
   }
 
   #dock {
-    @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden;
+    @apply absolute inset-x-0 bottom-0 z-50 flex flex-col items-center select-none max-sm:hidden;
 
     .dock-container {
-      @apply bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
+      @apply bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 mb-5 flex items-end gap-1.5 opacity-0 invisible dark:bg-black/30;
+      transform: translateY(120%);
+    }
+
+    .dock-trigger {
+      @apply w-full h-2.5;
     }
 
     .tooltip {

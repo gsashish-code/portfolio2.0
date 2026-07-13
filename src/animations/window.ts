@@ -1,11 +1,8 @@
 import gsap from 'gsap'
+import { prefersReducedMotion } from '#utils/motion'
 
 const OPEN_DURATION = 0.28
 const CLOSE_DURATION = 0.2
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
 
 /**
  * macOS-style window open: scale + fade in place, no bounce. Deliberately
