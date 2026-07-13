@@ -1,9 +1,14 @@
 import gsap from 'gsap'
+import { prefersReducedMotion } from '#utils/motion'
 
 const BASE_SCALE = 1.25
 const MAGNIFICATION_SCALE = 0.5
 const LIFT_DISTANCE = 15
 const FALLOFF = 2000
+
+const SHOW_DURATION = 0.35
+const HIDE_DURATION = 0.22
+const HIDE_OFFSET = '120%'
 
 export function magnifyDockIcons(dock: HTMLElement, mouseX: number) {
   const { left } = dock.getBoundingClientRect()
@@ -34,5 +39,35 @@ export function resetDockIcons(dock: HTMLElement) {
       duration: 0.2,
       ease: 'power1.out',
     })
+  })
+}
+
+/** macOS-style dock reveal: slides up from below the viewport edge. */
+export function showDock(dock: HTMLElement) {
+  if (prefersReducedMotion()) {
+    gsap.set(dock, { y: 0, autoAlpha: 1 })
+    return
+  }
+  gsap.to(dock, {
+    y: 0,
+    autoAlpha: 1,
+    duration: SHOW_DURATION,
+    ease: 'power3.out',
+    overwrite: true,
+  })
+}
+
+/** Reverse of showDock; drops the dock back below the viewport edge. */
+export function hideDock(dock: HTMLElement) {
+  if (prefersReducedMotion()) {
+    gsap.set(dock, { y: HIDE_OFFSET, autoAlpha: 0 })
+    return
+  }
+  gsap.to(dock, {
+    y: HIDE_OFFSET,
+    autoAlpha: 0,
+    duration: HIDE_DURATION,
+    ease: 'power2.in',
+    overwrite: true,
   })
 }

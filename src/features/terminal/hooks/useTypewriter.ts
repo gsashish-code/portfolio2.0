@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
+import { prefersReducedMotion } from '#utils/motion'
 
 const CHAR_INTERVAL_MS = 18
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
 
 /** Reveals `text` one character at a time; instant under prefers-reduced-motion. */
 export function useTypewriter(text: string): string {

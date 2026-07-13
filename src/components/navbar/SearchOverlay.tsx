@@ -55,12 +55,16 @@ function SearchOverlay({ anchorRef, onClose }: SearchOverlayProps) {
       style={{ left: position.x, top: position.y }}
     >
       <div
-        className={`w-90 overflow-hidden border border-white/30 bg-white/70 shadow-2xl backdrop-blur-xl ${
+        className={`w-90 overflow-hidden border border-white/30 bg-white/70 shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-gray-900/80 ${
           trimmedQuery ? 'rounded-3xl' : 'rounded-full'
         }`}
       >
         <div className="flex items-center gap-3 px-4 py-3">
-          <img src="/icons/search.svg" alt="" className="h-4 w-4 opacity-50" />
+          <img
+            src="/icons/search.svg"
+            alt=""
+            className="h-4 w-4 opacity-50 dark:invert"
+          />
           <input
             ref={inputRef}
             type="text"
@@ -68,16 +72,16 @@ function SearchOverlay({ anchorRef, onClose }: SearchOverlayProps) {
             onChange={(event) => setQuery(event.target.value)}
             onPointerDown={(event) => event.stopPropagation()}
             placeholder="Spotlight Search"
-            className="w-full cursor-text bg-transparent text-base text-gray-800 outline-none placeholder:text-gray-500"
+            className="w-full cursor-text bg-transparent text-base text-gray-800 outline-none placeholder:text-gray-500 dark:text-white dark:placeholder:text-gray-400"
           />
         </div>
 
         {results.length > 0 && (
-          <ul className="max-h-72 overflow-y-auto border-t border-black/10">
+          <ul className="max-h-72 overflow-y-auto border-t border-black/10 dark:border-white/10">
             {results.map((item) => (
               <li
                 key={item.id}
-                className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-black/5"
+                className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-black/5 dark:text-gray-200 dark:hover:bg-white/10"
               >
                 {item.name}
               </li>
@@ -86,7 +90,7 @@ function SearchOverlay({ anchorRef, onClose }: SearchOverlayProps) {
         )}
 
         {trimmedQuery && results.length === 0 && (
-          <p className="border-t border-black/10 px-4 py-3 text-sm text-gray-400">
+          <p className="border-t border-black/10 px-4 py-3 text-sm text-gray-400 dark:border-white/10">
             No results for &ldquo;{query}&rdquo;
           </p>
         )}
@@ -101,9 +105,13 @@ function SearchOverlay({ anchorRef, onClose }: SearchOverlayProps) {
             <span
               key={action.id}
               title={action.label}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/50 shadow backdrop-blur-xl"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/50 shadow backdrop-blur-xl dark:border-white/10 dark:bg-gray-900/60"
             >
-              <img src={action.icon} alt="" className="h-4 w-4 opacity-70" />
+              <img
+                src={action.icon}
+                alt=""
+                className="h-4 w-4 opacity-70 dark:invert"
+              />
             </span>
           ))}
         </div>

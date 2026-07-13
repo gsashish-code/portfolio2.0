@@ -1,5 +1,6 @@
 import { queryClient } from '#app/providers/queryClient'
 import type { Command } from '#features/terminal/types'
+import useSettingsStore from '#store/settings'
 
 import { fetchGithubStats } from '../github/fetchGithubStats'
 
@@ -9,6 +10,16 @@ export const githubStatsCommand: Command = {
   name: 'github stats',
   description: 'Live stats pulled from the GitHub REST API',
   run: async () => {
+    if (!useSettingsStore.getState().wifiEnabled || !navigator.onLine) {
+      return [
+        {
+          type: 'error',
+          content:
+            'You are not connected to the internet. Turn Wi-Fi on in Control Center and try again.',
+        },
+      ]
+    }
+
     try {
       const stats = await queryClient.fetchQuery({
         queryKey: ['github-stats', GITHUB_USERNAME],
