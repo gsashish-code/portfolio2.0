@@ -1,6 +1,12 @@
 import { useGSAP } from '@gsap/react'
 import { Minus, Plus, X, type LucideIcon } from 'lucide-react'
-import { useEffect, useRef, useState, type ComponentType } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentType,
+  type RefObject,
+} from 'react'
 
 import { animateWindowClose, animateWindowOpen } from '#animations/window'
 import { useWindowInteractions } from '#core/window/useWindowInteractions'
@@ -19,7 +25,8 @@ const TRAFFIC_LIGHT_COLORS: Record<TrafficLightProps['color'], string> = {
   green: 'bg-[#28c840]',
 }
 
-function TrafficLight({
+/** Exported so apps with their own custom chrome (e.g. Safari) can render matching traffic lights without duplicating the look. */
+export function TrafficLight({
   color,
   icon: Icon,
   label,
@@ -44,6 +51,13 @@ function TrafficLight({
 interface WindowWrapperOptions {
   defaultWidth?: number
   defaultHeight?: number
+  /**
+   * 'none' skips the generic dark title bar entirely and hands the wrapped
+   * component a `dragHandleRef` to attach to its own top chrome instead —
+   * for apps like Safari whose own toolbar (traffic lights included) IS the
+   * title bar, rather than a separate strip above it.
+   */
+  chrome?: 'default' | 'none'
 }
 
 const DEFAULT_WIDTH = 640
@@ -69,12 +83,18 @@ const DEFAULT_HEIGHT = 420
  * via `setWindowTitle` (e.g. Terminal switching to "Tech Stack").
  */
 function WindowWrapper<P extends object>(
-  Component: ComponentType<P & { data?: unknown }>,
+  Component: ComponentType<
+    P & {
+      data?: unknown
+      dragHandleRef?: RefObject<HTMLDivElement | null>
+    }
+  >,
   windowId: string,
   defaultTitle: string,
   {
     defaultWidth = DEFAULT_WIDTH,
     defaultHeight = DEFAULT_HEIGHT,
+    chrome = 'default',
   }: WindowWrapperOptions = {},
 ) {
   function WrappedComponent(props: P) {
@@ -127,28 +147,34 @@ function WindowWrapper<P extends object>(
         }}
         className="fixed top-0 left-0 flex flex-col overflow-hidden rounded-xl shadow-2xl ring-1 ring-black/40"
       >
-        <div
-          ref={titleBarRef}
-          className="flex h-8 shrink-0 cursor-grab items-center bg-[#2c2c2e] px-3 active:cursor-grabbing"
-        >
-          <div className="group flex items-center gap-2">
-            <TrafficLight
-              color="red"
-              icon={X}
-              label="Close"
-              onClick={() => closeWindow(windowId)}
-            />
-            <TrafficLight color="yellow" icon={Minus} label="Minimize" />
-            <TrafficLight color="green" icon={Plus} label="Maximize" />
+        {chrome === 'default' && (
+          <div
+            ref={titleBarRef}
+            className="flex h-8 shrink-0 cursor-grab items-center bg-[#2c2c2e] px-3 active:cursor-grabbing"
+          >
+            <div className="group flex items-center gap-2">
+              <TrafficLight
+                color="red"
+                icon={X}
+                label="Close"
+                onClick={() => closeWindow(windowId)}
+              />
+              <TrafficLight color="yellow" icon={Minus} label="Minimize" />
+              <TrafficLight color="green" icon={Plus} label="Maximize" />
+            </div>
+            <p className="flex-1 truncate text-center text-[13px] font-medium text-[#d1d1d1]">
+              {window.title ?? defaultTitle}
+            </p>
+            <div className="w-13" aria-hidden />
           </div>
-          <p className="flex-1 truncate text-center text-[13px] font-medium text-[#d1d1d1]">
-            {window.title ?? defaultTitle}
-          </p>
-          <div className="w-13" aria-hidden />
-        </div>
+        )}
 
         <div className="min-h-0 flex-1 overflow-hidden">
-          <Component {...props} data={window.data} />
+          <Component
+            {...props}
+            data={window.data}
+            dragHandleRef={chrome === 'none' ? titleBarRef : undefined}
+          />
         </div>
 
         <div

@@ -1,4 +1,4 @@
-import { techStack } from '#constants/index'
+import { techStack } from '#database'
 import type { Command } from '#features/terminal/types'
 
 export const techstackCommand: Command = {

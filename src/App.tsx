@@ -1,5 +1,6 @@
 import { NavBar, Welcome, Dock, ScreenDimOverlay } from '#components/index'
 import Photos from '#features/photos'
+import Safari from '#features/safari'
 import Terminal from '#features/terminal'
 import { useFullscreenSync } from '#hooks/useFullscreenSync'
 import { useThemeSync } from '#hooks/useThemeSync'
@@ -20,6 +21,7 @@ function App() {
       <Dock />
       <Terminal />
       <Photos />
+      <Safari />
       <ScreenDimOverlay />
     </main>
   )

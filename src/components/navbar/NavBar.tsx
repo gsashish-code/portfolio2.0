@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 
 import dayjs from 'dayjs'
 
-import { navIcons, navLinks } from '#constants/index'
+import { navIcons, navLinks } from '#database'
 
 import ControlCenterPopover from './ControlCenterPopover'
 import SearchOverlay from './SearchOverlay'

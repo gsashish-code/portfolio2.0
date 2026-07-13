@@ -1,4 +1,4 @@
-import { dockApps } from '#constants/index'
+import { dockApps } from '#database'
 
 export function toggleApplication(
   appId: string,
