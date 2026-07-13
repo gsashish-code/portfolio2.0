@@ -1,10 +1,8 @@
 import { queryClient } from '#app/providers/queryClient'
+import { GITHUB_USERNAME } from '#database'
 import type { Command } from '#features/terminal/types'
+import { fetchGithubStats } from '#services/github/fetchGithubStats'
 import useSettingsStore from '#store/settings'
-
-import { fetchGithubStats } from '../github/fetchGithubStats'
-
-export const GITHUB_USERNAME = 'gsashish-code'
 
 export const githubStatsCommand: Command = {
   name: 'github stats',

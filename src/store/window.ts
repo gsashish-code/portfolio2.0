@@ -1,4 +1,4 @@
-import { INITIAL_Z_INDEX, WINDOW_CONFIG } from '#constants/index'
+import { INITIAL_Z_INDEX, WINDOW_CONFIG } from '#database'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 

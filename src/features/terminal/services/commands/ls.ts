@@ -1,4 +1,4 @@
-import { locations } from '#constants/index'
+import { locations } from '#database'
 import type { Command } from '#features/terminal/types'
 
 export const lsCommand: Command = {

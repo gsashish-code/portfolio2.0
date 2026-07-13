@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-  type RefObject,
-} from 'react'
+import { useRef, useState, type ReactNode, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 import {
   Bluetooth,
@@ -18,6 +12,7 @@ import {
 } from 'lucide-react'
 
 import { useAnchoredPosition } from '#hooks/useAnchoredPosition'
+import { useIsFullscreen } from '#hooks/useIsFullscreen'
 import { usePopoverDismiss } from '#hooks/usePopoverDismiss'
 import { usePopoverEntrance } from '#hooks/usePopoverEntrance'
 import useSettingsStore from '#store/settings'
@@ -25,22 +20,6 @@ import useSettingsStore from '#store/settings'
 interface ControlCenterPopoverProps {
   anchorRef: RefObject<HTMLElement | null>
   onClose: () => void
-}
-
-/** Tracks real document fullscreen state so the tile stays correct even when exited via Esc. */
-function useIsFullscreen(): boolean {
-  const [isFullscreen, setIsFullscreen] = useState(() =>
-    Boolean(document.fullscreenElement),
-  )
-
-  useEffect(() => {
-    const handleChange = () =>
-      setIsFullscreen(Boolean(document.fullscreenElement))
-    document.addEventListener('fullscreenchange', handleChange)
-    return () => document.removeEventListener('fullscreenchange', handleChange)
-  }, [])
-
-  return isFullscreen
 }
 
 function toggleFullscreen() {

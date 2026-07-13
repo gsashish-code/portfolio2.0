@@ -1,4 +1,4 @@
-import { dockApps, navLinks } from '#constants/index'
+import { dockApps, navLinks } from '#database'
 
 export interface SearchableItem {
   id: string

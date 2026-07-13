@@ -1,4 +1,4 @@
-import { dockApps } from '#constants/index'
+import { dockApps } from '#database'
 import useWindowStore from '#store/window'
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'

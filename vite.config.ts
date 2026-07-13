@@ -26,8 +26,8 @@ export default defineConfig({
       '#components': fileURLToPath(
         new URL('./src/components', import.meta.url),
       ),
-      '#constants': fileURLToPath(new URL('./src/constants', import.meta.url)),
       '#core': fileURLToPath(new URL('./src/core', import.meta.url)),
+      '#database': fileURLToPath(new URL('./src/database.ts', import.meta.url)),
       '#features': fileURLToPath(new URL('./src/features', import.meta.url)),
       '#hoc': fileURLToPath(new URL('./src/hoc', import.meta.url)),
       '#hooks': fileURLToPath(new URL('./src/hooks', import.meta.url)),
